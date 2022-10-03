@@ -1,0 +1,85 @@
+#TOKEN
+#OTcyODEyOTIxOTI5MzU5Mzkx.GLbKeW.a_UECWL4L0QLktQfaDfVwgIg6VonG-iQNrFWSU
+
+
+
+#権限無し========
+#optionsに設定したものは{@text}で呼び出し
+#例:{@nopermission}
+#
+options:
+	nopermission: &a[&bPickaxe!&a]&c権限がありません!
+	
+
+#https://docs.disky.me/getting-started/bot-loading
+#コピペ
+
+# The name specified here doesn't matter with the one used in the developer portal. 
+# This one will only be used for recognize your bot in Skript code.
+define new bot named "mcsv-info": 
+    
+    # The bot's token, small reminder that it MUST be private!
+    token: "OTcyODEyOTIxOTI5MzU5Mzkx.GLbKeW.a_UECWL4L0QLktQfaDfVwgIg6VonG-iQNrFWSU"
+    
+    # Gateway intents enabled, others that are not listed here will be disabled.
+    # If you're not sure about that, leave it as 'default intents'.
+    intents: default intents
+    
+    # Advanced bot option, defining websocket, connection and privacy parameters.
+    # Here again, if you're not sure about that, leave it as shown below.
+    policy: all
+    auto reconnect: true
+    compression: none
+
+on ready:
+	send "&a%event-bot%&2 has been loaded!" to console
+	set {_pan} to new slash command named "pan" with description "誰か(もしくは自分を)panできます!"
+	add new user option named "target" with description "誰をpanするか決めよう!" to options of {_pan}
+	update {_pan} globally in event-bot
+
+on guild ready:
+	send "&a%event-bot%&2 just loaded &a%event-guild%&2 guild!" to console
+	set the presence of the bot named "mcsv-info" to competing "bot作成"
+	set the online status of bot "mcsv-info" to do not disturb
+
+#botの操作
+
+command /botdown:
+	trigger:
+		shutdown bot named "mcsv-info"
+		send "down"
+
+command /testbot:
+	trigger:
+		post "TEST" to text channel with id "907525069599801346"
+
+command /stat:
+	trigger:
+		set the presence of the bot named "mcsv-info" to competing "bot作成"
+		set the online status of bot "mcsv-info" to do not disturb
+
+#discord-コマンド======
+
+discord command test:
+    prefixes: !
+    trigger:
+        reply with "wheeee"
+
+discord command reply [<text>]:
+    prefixes: !
+    trigger:
+        if arg-1 is not set: # We check if the provided optional argument is set
+            reply with "Specify what you want me to say!"
+        else:
+            reply with arg-1
+
+#スラッシュ(test)
+
+on slash command:
+	set {_name} to event-string
+	if {_name} is "pan":
+		set {_target} to argument "target" as user
+		if {_target} is not set:
+			set {_target} to event-user
+		
+		reply with "%mention tag of {_target}%をpanしたよ!"
