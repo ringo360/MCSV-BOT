@@ -1,8 +1,3 @@
-#TOKEN
-#OTcyODEyOTIxOTI5MzU5Mzkx.GLbKeW.a_UECWL4L0QLktQfaDfVwgIg6VonG-iQNrFWSU
-
-
-
 #権限無し========
 #optionsに設定したものは{@text}で呼び出し
 #例:{@nopermission}
@@ -19,7 +14,7 @@ options:
 define new bot named "mcsv-info": 
     
     # The bot's token, small reminder that it MUST be private!
-    token: "OTcyODEyOTIxOTI5MzU5Mzkx.GLbKeW.a_UECWL4L0QLktQfaDfVwgIg6VonG-iQNrFWSU"
+    token: "Your Token Here"
     
     # Gateway intents enabled, others that are not listed here will be disabled.
     # If you're not sure about that, leave it as 'default intents'.
