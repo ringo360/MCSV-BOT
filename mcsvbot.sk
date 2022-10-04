@@ -1,33 +1,26 @@
+#mcsvbot.sk
+
 #権限無し========
-#optionsに設定したものは{@text}で呼び出し
-#例:{@nopermission}
-#
 options:
 	nopermission: &a[&bPickaxe!&a]&c権限がありません!
-	
 
-#https://docs.disky.me/getting-started/bot-loading
-#コピペ
 
-# The name specified here doesn't matter with the one used in the developer portal. 
-# This one will only be used for recognize your bot in Skript code.
 define new bot named "mcsv-info": 
     
-    # The bot's token, small reminder that it MUST be private!
-    token: "Your Token Here"
+    # https://discord.com/developers/ で作成したbotのtokenを記入
+
+    token: "Your Token"
     
-    # Gateway intents enabled, others that are not listed here will be disabled.
-    # If you're not sure about that, leave it as 'default intents'.
     intents: default intents
     
-    # Advanced bot option, defining websocket, connection and privacy parameters.
-    # Here again, if you're not sure about that, leave it as shown below.
     policy: all
     auto reconnect: true
     compression: none
 
 on ready:
 	send "&a%event-bot%&2 has been loaded!" to console
+	
+	#/panコマンド
 	set {_pan} to new slash command named "pan" with description "誰か(もしくは自分を)panできます!"
 	add new user option named "target" with description "誰をpanするか決めよう!" to options of {_pan}
 	update {_pan} globally in event-bot
@@ -36,17 +29,13 @@ on guild ready:
 	send "&a%event-bot%&2 just loaded &a%event-guild%&2 guild!" to console
 	set the presence of the bot named "mcsv-info" to competing "bot作成"
 	set the online status of bot "mcsv-info" to do not disturb
-
 #botの操作
+#起動は/sk reload
 
 command /botdown:
 	trigger:
 		shutdown bot named "mcsv-info"
 		send "down"
-
-command /testbot:
-	trigger:
-		post "TEST" to text channel with id "907525069599801346"
 
 command /stat:
 	trigger:
@@ -55,19 +44,28 @@ command /stat:
 
 #discord-コマンド======
 
-discord command test:
-    prefixes: !
-    trigger:
-        reply with "wheeee"
-
 discord command reply [<text>]:
-    prefixes: !
+    prefixes: .
     trigger:
         if arg-1 is not set: # We check if the provided optional argument is set
             reply with "Specify what you want me to say!"
         else:
             reply with arg-1
+discord command ping:
+    prefixes: .
+    trigger:
+        reply with "pong!"
 
+discord command about:
+	prefixes: .
+	trigger:
+		make embed:
+			set author of the embed to "MCSV-TestBot"
+			set author icon of embed to "https://cdn.discordapp.com/attachments/939476695285641226/1026386703780413480/nccon.png"
+			set embed color of embed to lime
+			set description of embed to "このbotはSkriptで作成されています。%nl%ｽｺﾞｲﾃﾞｼｮ!"
+			add field named "Skript+Diskyによって作られた、テスト中のbotです。" with value "今後、このbotによって、様々な事が出来るようになります!" to fields of embed
+		reply with last embed
 #スラッシュ(test)
 
 on slash command:
