@@ -25,6 +25,11 @@ on ready:
 	add new user option named "target" with description "誰をpanするか決めよう!" to options of {_pan}
 	update {_pan} globally in event-bot
 
+	#/aboutコマンド
+#	set {_about} to new slash command named "about" with description "このbotについて"
+#	update {_about} globally in event-bot
+#	wait a seconds
+
 on guild ready:
 	send "&a%event-bot%&2 just loaded &a%event-guild%&2 guild!" to console
 	set the presence of the bot named "mcsv-info" to competing "bot作成"
@@ -51,10 +56,25 @@ discord command reply [<text>]:
             reply with "Specify what you want me to say!"
         else:
             reply with arg-1
-discord command ping:
-    prefixes: .
-    trigger:
-        reply with "pong!"
+discord command ping [<offlineplayer>]:
+	prefixes: .
+	trigger:
+		if offline player-arg is online:
+			reply with "%arg-1%のPing: %arg-1's ping%ms"
+			stop
+		if arg-1 is not set:
+			reply with "プレイヤーを指定してください!"
+			stop
+		if offline player-arg is offline:
+			reply with "Error!"
+			stop
+
+discord command list:
+	prefixes: .
+	trigger:
+		loop all players:
+			add loop-player to {_player::*}
+			reply with "[Player List]%nl% %{_player::*}%"
 
 discord command about:
 	prefixes: .
@@ -64,7 +84,7 @@ discord command about:
 			set author icon of embed to "https://cdn.discordapp.com/attachments/939476695285641226/1026386703780413480/nccon.png"
 			set embed color of embed to lime
 			set description of embed to "このbotはSkriptで作成されています。%nl%ｽｺﾞｲﾃﾞｼｮ!"
-			add field named "Skript+Diskyによって作られた、テスト中のbotです。" with value "今後、このbotによって、様々な事が出来るようになります!" to fields of embed
+			add field named "Skript+Diskyによって作られた、テスト中のbotです。" with value "今後、このbotによって、様々な事が出来るようになります!%nl%---------------%nl%このbotのskriptはGithubに公開されています。%nl%https://github.com/ringo360/MCSV-BOT" to fields of embed
 		reply with last embed
 #スラッシュ(test)
 
