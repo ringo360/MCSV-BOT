@@ -4,15 +4,14 @@
 options:
 	nopermission: &a[&bPickaxe!&a]&c権限がありません!
 
+#=============================================
 
 define new bot named "mcsv-info": 
     
     # https://discord.com/developers/ で作成したbotのtokenを記入
 
     token: "Your Token"
-    
     intents: default intents
-    
     policy: all
     auto reconnect: true
     compression: none
@@ -34,6 +33,8 @@ on guild ready:
 	send "&a%event-bot%&2 just loaded &a%event-guild%&2 guild!" to console
 	set the presence of the bot named "mcsv-info" to competing "bot作成"
 	set the online status of bot "mcsv-info" to do not disturb
+
+#==================================================
 #botの操作
 #起動は/sk reload
 
@@ -56,6 +57,7 @@ discord command reply [<text>]:
             reply with "Specify what you want me to say!"
         else:
             reply with arg-1
+
 discord command ping [<offlineplayer>]:
 	prefixes: .
 	trigger:
@@ -74,7 +76,8 @@ discord command list:
 	trigger:
 		loop all players:
 			add loop-player to {_player::*}
-			reply with "[Player List]%nl% %{_player::*}%"
+	
+		reply with "[Player List]%nl% %{_player::*}%"
 
 discord command about:
 	prefixes: .
