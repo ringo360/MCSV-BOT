@@ -2,16 +2,17 @@
 
 #権限無し========
 options:
-	nopermission: &a[&bPickaxe!&a]&c権限がありません!
+	nopermission: &a[&bPickChan&a]&c権限がありません!
 
-#=============================================
 
 define new bot named "mcsv-info": 
     
     # https://discord.com/developers/ で作成したbotのtokenを記入
 
-    token: "Your Token"
+    token: "OTcyODEyOTIxOTI5MzU5Mzkx.GnE8er.bc5c8ATLK8fpH2yPcgfLGF0myBUgeEmO4WW2FU"
+    
     intents: default intents
+    
     policy: all
     auto reconnect: true
     compression: none
@@ -33,20 +34,15 @@ on guild ready:
 	send "&a%event-bot%&2 just loaded &a%event-guild%&2 guild!" to console
 	set the presence of the bot named "mcsv-info" to competing "bot作成"
 	set the online status of bot "mcsv-info" to do not disturb
-
-#==================================================
 #botの操作
 #起動は/sk reload
 
 command /botdown:
+	permission: admin
+	permission message: {@nopermission}
 	trigger:
 		shutdown bot named "mcsv-info"
 		send "down"
-
-command /stat:
-	trigger:
-		set the presence of the bot named "mcsv-info" to competing "bot作成"
-		set the online status of bot "mcsv-info" to do not disturb
 
 #discord-コマンド======
 
@@ -85,9 +81,20 @@ discord command about:
 		make embed:
 			set author of the embed to "MCSV-TestBot"
 			set author icon of embed to "https://cdn.discordapp.com/attachments/939476695285641226/1026386703780413480/nccon.png"
-			set embed color of embed to lime
+			set embed color of embed to rgb 0, 255, 255
 			set description of embed to "このbotはSkriptで作成されています。%nl%ｽｺﾞｲﾃﾞｼｮ!"
 			add field named "Skript+Diskyによって作られた、テスト中のbotです。" with value "今後、このbotによって、様々な事が出来るようになります!%nl%---------------%nl%このbotのskriptはGithubに公開されています。%nl%https://github.com/ringo360/MCSV-BOT" to fields of embed
+		reply with last embed
+
+discord command help:
+	prefixes: .
+	trigger:
+		make embed:
+			set author of the embed to "MCSV-TestBot"
+			set author icon of embed to "https://cdn.discordapp.com/attachments/939476695285641226/1026386703780413480/nccon.png"
+			set embed color of embed to rgb 0, 255, 0
+			set description of embed to "https://github.com/ringo360/MCSV-BOT"
+			add field named "コマンド一覧" with value ".help - このメッセージを表示します!%nl%.about - このBOTについて表示します!%nl%.list - サーバー内にいるプレイヤー一覧を表示します!(テスト中)%nl%.ping MCID - サーバー内に居るプレイヤーのpingを表示します!(テスト中)%nl%.reply テキスト - あなたが言った事をそっくりそのまま返します!" to fields of embed
 		reply with last embed
 #スラッシュ(test)
 
