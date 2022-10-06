@@ -9,7 +9,7 @@ define new bot named "mcsv-info":
     
     # https://discord.com/developers/ で作成したbotのtokenを記入
 
-    token: "OTcyODEyOTIxOTI5MzU5Mzkx.GnE8er.bc5c8ATLK8fpH2yPcgfLGF0myBUgeEmO4WW2FU"
+    token: "Your Token"
     
     intents: default intents
     
