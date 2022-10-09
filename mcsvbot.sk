@@ -17,16 +17,33 @@ define new bot named "mcsv-info":
 
 on ready:
 	send "&a%event-bot%&2 has been loaded!" to console
-	
+
+	#/helpコマンド
+	set {_help} to new slash command named "help" with description "なんだこのbotって思った人へ"
+
 	#/panコマンド
 	set {_pan} to new slash command named "pan" with description "誰か(もしくは自分を)panできます!"
-	add new user option named "target" with description "誰をpanするか決めよう!" to options of {_pan}
+	add new required user option named "target" with description "誰をpanするか決めよう!" to options of {_pan}
 
 	#/aboutコマンド
 	set {_about} to new slash command named "about" with description "このbotについて"
 
+	#/listコマンド
+	set {_list} to new slash command named "list" with description "(テスト中)サーバー内のプレイヤー一覧を表示"
+
+	#/pingコマンド
+	set {_ping} to new slash command named "ping" with description "(製作中)プレイヤーのpingを確認します"
+	add new auto complete string option named "mcid" with description "プレイヤーを指定してください" to options of {_ping}
+	
+	#/uptimeコマンド
+	set {_uptime} to new slash command named "uptime" with description "botの稼働時間を調べます"
+	
+	#/replyコマンド
+	set {_reply} to new slash command named "reply" with description "入力された文をそっくりそのまま返します"
+	add new required auto complete string option named "text" with description "botが返信する文章" to options of {_reply}
+
 	wait a tick
-	update {_pan}, {_about} globally in event-bot
+	update {_help}, {_pan}, {_about}, {_list}, {_ping}, {_uptime}, {_reply}, {_sha256} globally in event-bot
 
 on guild ready:
 	send "&a%event-bot%&2 just loaded &a%event-guild%&2 guild!" to console
@@ -48,30 +65,6 @@ command /botdown:
 #discord-コマンド====================
 
 
-discord command help:
-	prefixes: .
-	trigger:
-		make embed:
-			set author of the embed to "MCSV-TestBot"
-			set author icon of embed to "https://cdn.discordapp.com/attachments/939476695285641226/1026386703780413480/nccon.png"
-			set embed color of embed to rgb 0, 255, 0
-			set description of embed to "https://github.com/ringo360/MCSV-BOT"
-			add field named "コマンド一覧" with value ".help - このメッセージを表示します!%nl%.about - このBOTについて表示します!%nl%.list - サーバー内にいるプレイヤー一覧を表示します!(テスト中)%nl%.ping MCID - サーバー内に居るプレイヤーのpingを表示します!(テスト中)%nl%.reply テキスト - あなたが言った事をそっくりそのまま返します!" to fields of embed
-		reply with last embed
-
-
-discord command about:
-	prefixes: .
-	trigger:
-		make embed:
-			set author of the embed to "MCSV-TestBot"
-			set author icon of embed to "https://cdn.discordapp.com/attachments/939476695285641226/1026386703780413480/nccon.png"
-			set embed color of embed to rgb 0, 255, 255
-			set description of embed to "このbotはSkriptで作成されています。%nl%ｽｺﾞｲﾃﾞｼｮ!"
-			add field named "Skript+Diskyによって作られた、テスト中のbotです。" with value "今後、このbotによって、様々な事が出来るようになります!%nl%---------------%nl%このbotのskriptはGithubに公開されています。%nl%https://github.com/ringo360/MCSV-BOT" to fields of embed
-		reply with last embed
-
-
 discord command reply [<text>]:
     prefixes: .
     trigger:
@@ -81,36 +74,19 @@ discord command reply [<text>]:
             reply with arg-1
 
 
-discord command ping [<offlineplayer>]:
-	prefixes: .
-	trigger:
-		if offline player-arg is online:
-			reply with "%arg-1%のPing: %arg-1's ping%ms"
-			stop
-		if arg-1 is not set:
-			reply with "プレイヤーを指定してください!"
-			stop
-		if offline player-arg is offline:
-			reply with "Error! - プレイヤーが見つかりません!"
-			stop
-
-
-
-discord command list:
-	prefixes: .
-	trigger:
-		loop all players:
-			add loop-player to {_player::*}
-	
-		reply with "[Player List]%nl% %{_player::*}%"
-
-
-
-discord command uptime:
-	prefixes: .
-	trigger:
-		reply with "Uptime: **%bot uptime of event-bot%**"
-
+#discord command ping [<offlineplayer>]:
+#	prefixes: .
+#	trigger:
+#		if event-bot is bot "mcsv-info":
+#			if offline player-arg is online:
+#				execute reply with "%arg-1%のPing: %arg-1's ping%ms" with bot "mcsv-info"
+#				stop
+#			if arg-1 is not set:
+#				execute reply with "プレイヤーを指定してください!" with bot "mcsv-info"
+#				stop
+#			if offline player-arg is offline:
+#				execute reply with "Error! - プレイヤーが見つかりません!" with bot "mcsv-info"
+#				stop
 
 
 
@@ -124,6 +100,24 @@ on slash command:
 			set {_target} to event-user
 		
 		reply with "%mention tag of {_target}%をpanしたよ!"
+	if {_name} is "reply":
+		set {_text} to argument "text" as user
+		if {_text} is not set:
+			reply with "文章を入れてください!"
+		
+		reply with "%{_text}%"
+
+	if {_name} is "ping":
+		set {_mcid} to argument "mcid" as user
+		if {_mcid} is not set:
+			reply with "MCIDを指定してください!"
+		
+		loop all players:
+			add loop-player to {_ping::*}
+			post "[log] playerlist: %{_ping::*}%" to text channel with id "907525069599801346"
+			if contains({_list::*}, "mcid") is true:
+		reply with "%{_mcid}%のping: %{_pingmc}'s ping%"
+
 	if {_name} is "about":
 		make embed:
 			set author of the embed to "MCSV-TestBot"
@@ -132,3 +126,27 @@ on slash command:
 			set description of embed to "このbotはSkriptで作成されています。%nl%ｽｺﾞｲﾃﾞｼｮ!"
 			add field named "Skript+Diskyによって作られた、テスト中のbotです。" with value "今後、このbotによって、様々な事が出来るようになります!%nl%---------------%nl%このbotのskriptはGithubに公開されています。%nl%https://github.com/ringo360/MCSV-BOT" to fields of embed
 		reply with last embed
+	if {_name} is "list":
+		loop all players:
+			add loop-player to {_player::*}
+		reply with "[Player List]%nl% %{_player::*}%"
+	if {_name} is "help":
+		make embed:
+			set author of the embed to "MCSV-TestBot"
+			set author icon of embed to "https://cdn.discordapp.com/attachments/939476695285641226/1026386703780413480/nccon.png"
+			set embed color of embed to rgb 0, 255, 0
+			set description of embed to "https://github.com/ringo360/MCSV-BOT"
+			add field named "コマンド一覧" with value "/help - このメッセージを表示します!%nl%.about - このBOTについて表示します!%nl%/list - サーバー内にいるプレイヤー一覧を表示します!(テスト中)%nl%/ping MCID - サーバー内に居るプレイヤーのpingを表示します!(テスト中)%nl%/reply テキスト - あなたが言った事をそっくりそのまま返します!%nl%/uptime - 稼働時間を調べます" to fields of embed
+		reply with last embed
+	if {_name} is "uptime":
+		reply with "Uptime: **%bot uptime of event-bot%**"
+
+
+function contains(list: objects, check: object) :: boolean:
+	loop {_ping::*}:
+		if loop-value is {_mcid}:
+			set {_pingmc} to loop-value
+			return true
+#			post "[log] :check:" to text channel with id "907525069599801346"
+	return false
+	post "[log] :x:" to text channel with id "907525069599801346"
