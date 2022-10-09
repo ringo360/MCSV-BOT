@@ -1,7 +1,7 @@
 #権限無し========
 options:
 	nopermission: &a[&bPickChan&a]&c権限がありません!
-
+	botname: mcsv-info
 
 define new bot named "mcsv-info": 
     
@@ -21,12 +21,12 @@ on ready:
 	#/panコマンド
 	set {_pan} to new slash command named "pan" with description "誰か(もしくは自分を)panできます!"
 	add new user option named "target" with description "誰をpanするか決めよう!" to options of {_pan}
-	update {_pan} globally in event-bot
 
 	#/aboutコマンド
-#	set {_about} to new slash command named "about" with description "このbotについて"
-#	update {_about} globally in event-bot
-#	wait a seconds
+	set {_about} to new slash command named "about" with description "このbotについて"
+
+	wait a tick
+	update {_pan}, {_about} globally in event-bot
 
 on guild ready:
 	send "&a%event-bot%&2 just loaded &a%event-guild%&2 guild!" to console
@@ -43,7 +43,7 @@ command /botdown:
 		shutdown bot named "mcsv-info"
 		send "down"
 
-botの開始はsk reloadで代用
+#botの開始はsk reloadで代用
 
 #discord-コマンド====================
 
@@ -76,7 +76,7 @@ discord command reply [<text>]:
     prefixes: .
     trigger:
         if arg-1 is not set: # We check if the provided optional argument is set
-            reply with "Specify what you want me to say!"
+            reply with "使用方法: .reply テキスト"
         else:
             reply with arg-1
 
@@ -95,6 +95,7 @@ discord command ping [<offlineplayer>]:
 			stop
 
 
+
 discord command list:
 	prefixes: .
 	trigger:
@@ -102,6 +103,15 @@ discord command list:
 			add loop-player to {_player::*}
 	
 		reply with "[Player List]%nl% %{_player::*}%"
+
+
+
+discord command uptime:
+	prefixes: .
+	trigger:
+		reply with "Uptime: **%bot uptime of event-bot%**"
+
+
 
 
 #スラッシュ(test)
@@ -114,3 +124,11 @@ on slash command:
 			set {_target} to event-user
 		
 		reply with "%mention tag of {_target}%をpanしたよ!"
+	if {_name} is "about":
+		make embed:
+			set author of the embed to "MCSV-TestBot"
+			set author icon of embed to "https://cdn.discordapp.com/attachments/939476695285641226/1026386703780413480/nccon.png"
+			set embed color of embed to rgb 0, 255, 255
+			set description of embed to "このbotはSkriptで作成されています。%nl%ｽｺﾞｲﾃﾞｼｮ!"
+			add field named "Skript+Diskyによって作られた、テスト中のbotです。" with value "今後、このbotによって、様々な事が出来るようになります!%nl%---------------%nl%このbotのskriptはGithubに公開されています。%nl%https://github.com/ringo360/MCSV-BOT" to fields of embed
+		reply with last embed
