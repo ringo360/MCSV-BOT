@@ -42,6 +42,11 @@ on ready:
 	set {_reply} to new slash command named "reply" with description "入力された文をそっくりそのまま返します"
 	add new required auto complete string option named "text" with description "botが返信する文章" to options of {_reply}
 
+	#/sha256コマンド
+	set {_sha256} to new slash command named "sha256" with description "文字を暗号化します(?)"
+	add new required auto complete string option named "text" with description "暗号化する文章" to options of {_sha256}
+
+
 	wait a tick
 	update {_help}, {_pan}, {_about}, {_list}, {_ping}, {_uptime}, {_reply}, {_sha256} globally in event-bot
 
@@ -106,6 +111,16 @@ on slash command:
 			reply with "文章を入れてください!"
 		
 		reply with "%{_text}%"
+
+	if {_name} is "sha256":
+		set {_shatext} to argument "text" as user
+		if {_shatext} is not set:
+			reply with "文章を入れてください!"
+		
+		set {_hashed256} to {_shatext} hashed with SHA-256
+		reply with "暗号化しました!:`%{_hashed256}%`"
+
+
 
 	if {_name} is "ping":
 		set {_mcid} to argument "mcid" as user
