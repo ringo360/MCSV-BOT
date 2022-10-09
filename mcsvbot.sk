@@ -31,9 +31,9 @@ on ready:
 	#/listコマンド
 	set {_list} to new slash command named "list" with description "(テスト中)サーバー内のプレイヤー一覧を表示"
 
-	#/pingコマンド
-	set {_ping} to new slash command named "ping" with description "(製作中)プレイヤーのpingを確認します"
-	add new auto complete string option named "mcid" with description "プレイヤーを指定してください" to options of {_ping}
+#	#/pingコマンド
+#	set {_ping} to new slash command named "ping" with description "(製作中)プレイヤーのpingを確認します"
+#	add new auto complete string option named "mcid" with description "プレイヤーを指定してください" to options of {_ping}
 	
 	#/uptimeコマンド
 	set {_uptime} to new slash command named "uptime" with description "botの稼働時間を調べます"
@@ -95,43 +95,35 @@ discord command reply [<text>]:
 
 
 
-#スラッシュ(test)
+#SLASH COMMAND=====================
 
 on slash command:
 	set {_name} to event-string
+
+
+#pan===============================
+
 	if {_name} is "pan":
 		set {_target} to argument "target" as user
 		if {_target} is not set:
 			set {_target} to event-user
-		
 		reply with "%mention tag of {_target}%をpanしたよ!"
 	if {_name} is "reply":
 		set {_text} to argument "text" as user
 		if {_text} is not set:
 			reply with "文章を入れてください!"
-		
 		reply with "%{_text}%"
+
+#sha256============================
 
 	if {_name} is "sha256":
 		set {_shatext} to argument "text" as user
 		if {_shatext} is not set:
 			reply with "文章を入れてください!"
-		
 		set {_hashed256} to {_shatext} hashed with SHA-256
 		reply with "暗号化しました!:`%{_hashed256}%`"
 
-
-
-	if {_name} is "ping":
-		set {_mcid} to argument "mcid" as user
-		if {_mcid} is not set:
-			reply with "MCIDを指定してください!"
-		
-		loop all players:
-			add loop-player to {_ping::*}
-			post "[log] playerlist: %{_ping::*}%" to text channel with id "907525069599801346"
-			if contains({_list::*}, "mcid") is true:
-		reply with "%{_mcid}%のping: %{_pingmc}'s ping%"
+#about============================
 
 	if {_name} is "about":
 		make embed:
@@ -141,10 +133,17 @@ on slash command:
 			set description of embed to "このbotはSkriptで作成されています。%nl%ｽｺﾞｲﾃﾞｼｮ!"
 			add field named "Skript+Diskyによって作られた、テスト中のbotです。" with value "今後、このbotによって、様々な事が出来るようになります!%nl%---------------%nl%このbotのskriptはGithubに公開されています。%nl%https://github.com/ringo360/MCSV-BOT" to fields of embed
 		reply with last embed
+
+#list============================
+
 	if {_name} is "list":
 		loop all players:
 			add loop-player to {_player::*}
 		reply with "[Player List]%nl% %{_player::*}%"
+
+
+#help============================
+
 	if {_name} is "help":
 		make embed:
 			set author of the embed to "MCSV-TestBot"
@@ -153,15 +152,22 @@ on slash command:
 			set description of embed to "https://github.com/ringo360/MCSV-BOT"
 			add field named "コマンド一覧" with value "/help - このメッセージを表示します!%nl%.about - このBOTについて表示します!%nl%/list - サーバー内にいるプレイヤー一覧を表示します!(テスト中)%nl%/ping MCID - サーバー内に居るプレイヤーのpingを表示します!(テスト中)%nl%/reply テキスト - あなたが言った事をそっくりそのまま返します!%nl%/uptime - 稼働時間を調べます" to fields of embed
 		reply with last embed
+
+
+#uptime==========================
+
 	if {_name} is "uptime":
 		reply with "Uptime: **%bot uptime of event-bot%**"
 
 
-function contains(list: objects, check: object) :: boolean:
-	loop {_ping::*}:
-		if loop-value is {_mcid}:
-			set {_pingmc} to loop-value
-			return true
-#			post "[log] :check:" to text channel with id "907525069599801346"
-	return false
-	post "[log] :x:" to text channel with id "907525069599801346"
+
+
+
+#未使用のコマンド=======================================================
+
+#	if {_name} is "ping":
+#		set {_mcid} to argument "mcid" as user
+#		if {_mcid} is not set:
+#			reply with "MCIDを指定してください!"
+#
+#		reply with "%{_mcid}%のping: %{_pingmc}'s ping%"
