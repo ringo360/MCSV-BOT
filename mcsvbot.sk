@@ -67,18 +67,6 @@ command /botdown:
 
 #botの開始はsk reloadで代用
 
-#discord-コマンド====================
-
-
-discord command reply [<text>]:
-    prefixes: .
-    trigger:
-        if arg-1 is not set: # We check if the provided optional argument is set
-            reply with "使用方法: .reply テキスト"
-        else:
-            reply with arg-1
-
-
 #discord command ping [<offlineplayer>]:
 #	prefixes: .
 #	trigger:
@@ -160,11 +148,7 @@ on slash command:
 		reply with "Uptime: **%bot uptime of event-bot%**"
 
 
-
-
-
 #未使用のコマンド=======================================================
-
 #	if {_name} is "ping":
 #		set {_mcid} to argument "mcid" as user
 #		if {_mcid} is not set:
