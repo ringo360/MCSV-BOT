@@ -31,28 +31,35 @@ on ready:
 	#/listコマンド
 	set {_list} to new slash command named "list" with description "(テスト中)サーバー内のプレイヤー一覧を表示"
 
-#	#/pingコマンド
-#	set {_ping} to new slash command named "ping" with description "(製作中)プレイヤーのpingを確認します"
-#	add new auto complete string option named "mcid" with description "プレイヤーを指定してください" to options of {_ping}
+	#/pingコマンド
+	set {_ping} to new slash command named "ping" with description "(製作中)プレイヤーのpingを確認します"
 	
 	#/uptimeコマンド
 	set {_uptime} to new slash command named "uptime" with description "botの稼働時間を調べます"
 	
 	#/replyコマンド
-	set {_reply} to new slash command named "reply" with description "入力された文をそっくりそのまま返します"
-	add new required auto complete string option named "text" with description "botが返信する文章" to options of {_reply}
+#	set {_reply} to new slash command named "reply" with description "入力された文をそっくりそのまま返します"
+#	add new required auto complete string option named "text" with description "botが返信する文章" to options of {_reply}
+#	new choice with name string with value number
 
 	#/sha256コマンド
 	set {_sha256} to new slash command named "sha256" with description "文字を暗号化します(?)"
 	add new required auto complete string option named "text" with description "暗号化する文章" to options of {_sha256}
+	
+#	#/calcコマンド
+#	set {_calc} to new slash command named "calc" with description "簡単な計算ができます!"
+#	add new required auto complete number option named "数字" with description "1つ目の数字を入力" to options of {_calc}
+#	add new required auto complete string option named "符号" with description "符号を入力" to options of {_calc}
+#	add new required auto complete number option named "数字2" with description "2つ目の数字を入力" to options of {_calc}
+	
 
 
 	wait a tick
-	update {_help}, {_pan}, {_about}, {_list}, {_ping}, {_uptime}, {_reply}, {_sha256} globally in event-bot
+	update {_help}, {_pan}, {_about}, {_list}, {_ping}, {_uptime}, and {_sha256} globally in event-bot
 
 on guild ready:
 	send "&a%event-bot%&2 just loaded &a%event-guild%&2 guild!" to console
-	set the presence of the bot named "mcsv-info" to listening ".help"
+	set the presence of the bot named "mcsv-info" to playing "/help"
 	set the online status of bot "mcsv-info" to idle
 
 #console-操作========================
@@ -66,6 +73,18 @@ command /botdown:
 		send "down"
 
 #botの開始はsk reloadで代用
+
+#discord-コマンド====================
+
+
+#discord command reply [<text>]:
+#    prefixes: .
+#    trigger:
+#        if arg-1 is not set: # We check if the provided optional argument is set
+#            reply with "使用方法: .reply テキスト"
+#        else:
+#            reply with arg-1
+
 
 #discord command ping [<offlineplayer>]:
 #	prefixes: .
@@ -148,10 +167,14 @@ on slash command:
 		reply with "Uptime: **%bot uptime of event-bot%**"
 
 
+#calc==========================
+
+#	if {_name} is "calc"
+#		reply 
+
+
 #未使用のコマンド=======================================================
+
 #	if {_name} is "ping":
-#		set {_mcid} to argument "mcid" as user
-#		if {_mcid} is not set:
-#			reply with "MCIDを指定してください!"
-#
-#		reply with "%{_mcid}%のping: %{_pingmc}'s ping%"
+#		show typing status in event-channel
+#		reply with "pingコマンドは準備中です..."
